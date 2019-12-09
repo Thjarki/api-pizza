@@ -20,8 +20,10 @@ pizzas = page_soup.findAll("div", {"class" : "item"})
 for pizza in pizzas:
 	pizzaName = pizza.find("div",{"class", "item_title"}).text.strip()
 	pizzaTopping = pizza.find("div",{"class", "item_desc"}).text.strip()
+	listPizzaTopping = pizzaTopping.split(", ")
 	pizzaMidPrice = pizza.find("div",{"class", "item_price"}).text.strip()[5:10]
 
 	print("Nafn : " + pizzaName )
 	print("alegg : " + pizzaTopping)
+	print(listPizzaTopping)
 	print("midstared : " + pizzaMidPrice)

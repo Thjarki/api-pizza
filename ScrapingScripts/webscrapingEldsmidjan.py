@@ -23,13 +23,15 @@ for pizza in pizzas:
 	temp = pizza.h3.text.replace("\r", "").replace("\t", "").replace("\n", "").replace("E1", "").replace("E2", "")
 	pizzaName = ''.join(i for i in temp if not i.isdigit())
 	pizzaTopping = pizza.p.text.strip()
+	listPizzaTopping = pizzaTopping.split(", ")
 	pizzaMidPrice = pizza.li.text.replace("\r", "").replace("\t", "").replace("\n", "").replace("+", "")[3:]
 	pizzaBigPrice = pizza.findAll("li")[1].text.replace("\r", "").replace("\t", "").replace("\n", "").replace("+", "")[4:]
 
 
 	print("Nafn : " + pizzaName )
 	print("alegg : " + pizzaTopping)
-	print("midstared : " + pizzaMidsizePrice)
-	print("stor verd : " + pizzaBigsizePrice)
+	print(listPizzaTopping)
+	print("midstared : " + pizzaMidPrice)
+	print("stor verd : " + pizzaBigPrice)
 
 #þessi web scraper tekur bara pizzur ekki tilboð

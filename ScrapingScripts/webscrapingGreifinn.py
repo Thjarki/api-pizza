@@ -22,6 +22,7 @@ next(iterPizzas)
 for pizza in iterPizzas:
 	pizzaName = pizza.h4.text
 	pizzaTopping =  pizza.div.text
+	listPizzaTopping = pizzaTopping.split(", ")
 	temp = pizza.find("div", {"class" : "price"}).findAll("div")[0].text
 	pizzaSmallPrice = ''.join(i for i in temp if i.isdigit())
 	temp = pizza.find("div", {"class" : "price"}).findAll("div")[1].text
@@ -31,6 +32,7 @@ for pizza in iterPizzas:
 
 	print("Nafn : " + pizzaName )
 	print("alegg : " + pizzaTopping)
+	print(listPizzaTopping)
 	print("litil verd: " + pizzaSmallPrice)
 	print("midstared : " + pizzaMidPrice)
 	print("stor verd : " + pizzaBigPrice)

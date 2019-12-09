@@ -24,6 +24,7 @@ for pizza in pizzas[:28]:
 		continue
 	pizzaName = pizza.h2.text.strip()
 	pizzaTopping = pizza.p.text.split('\n')[0]
+	listPizzaTopping = pizzaTopping.split(", ")
 	try:
 		pizzaSmallPrice = pizzasPrice[i].findAll("span")[1].text.strip()
 	except:
@@ -41,6 +42,7 @@ for pizza in pizzas[:28]:
 
 	print("Nafn : " + pizzaName )
 	print("alegg : " + pizzaTopping)
+	print(listPizzaTopping)
 	print("litil verd: " + pizzaSmallPrice)
 	print("midstared : " + pizzaMidPrice)
 	print("stor verd : " + pizzaBigPrice)	

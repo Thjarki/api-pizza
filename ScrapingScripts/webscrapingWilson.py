@@ -20,6 +20,7 @@ next(iterpizzas)
 for pizza in iterpizzas:
 	pizzaName = pizza.span.text.replace(" m/20% afslætti", "").replace("Stór ", "").replace(" m/25% afslætti", "")
 	pizzaTopping = pizza.find("span", {"class" : "aleggslysingText"}).text
+	listPizzaTopping = pizzaTopping.split(", ")
 	try:
 		temp = pizza.findAll("option")[0].text[2:].replace("m/3", "").replace("Rocky 2", "") 
 		pizzaBigPrice = ''.join(i for i in temp if i.isdigit())
@@ -38,6 +39,7 @@ for pizza in iterpizzas:
 
 	print("Nafn : " + pizzaName )
 	print("alegg : " + pizzaTopping)
+	print(listPizzaTopping)
 	print("litil verd: " + pizzaSmallPrice)
 	print("midstared : " + pizzaMidPrice)
 	print("stor verd : " + pizzaBigPrice)	

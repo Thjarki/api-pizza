@@ -19,12 +19,14 @@ pizzas = page_soup.findAll("div", {"class":"tile product image"})
 for pizza in pizzas:
 	pizzaName = pizza.h2.text
 	pizzaTopping = pizza.findAll("div", {"class":"description"})[0].text
+	listPizzaTopping = pizzaTopping.split(", ")
 	pizzaSmallPrice = pizza.findAll("span", {"class":"price"})[0].text
 	pizzaMidPrice = pizza.findAll("span", {"class":"price"})[1].text
 	pizzaBigPrice = pizza.findAll("span", {"class":"price"})[2].text
 
 	print("Nafn : " + pizzaName )
 	print("alegg : " + pizzaTopping)
+	print(listPizzaTopping)
 	print("litil verd: " + pizzaSmallPrice)
 	print("midstared : " + pizzaMidPrice)
 	print("stor verd : " + pizzaBigPrice)
