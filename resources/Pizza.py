@@ -32,6 +32,7 @@ class PizzaResource(Resource):
         db.session.add(pizza)
         db.session.commit()
 
+
         result = pizza_schema.dump(pizza)
 
         return {"status": 'success', 'data': result}, 201
