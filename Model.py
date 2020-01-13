@@ -15,8 +15,8 @@ class Pizza(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     prices = db.relationship('Price', uselist=False ,backref='pizza', lazy=True)
-    toppings = db.relationship('Topping', secondary=toppings, lazy='subquery',
-        backref=db.backref('pages', lazy=True))
+    toppings = db.relationship('Topping', secondary=toppings, lazy='subquery')
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
 
     def __str__(self):
         return "%s,\n%s" % (self.name, self.toppings)
@@ -43,11 +43,29 @@ class Topping(db.Model):
     __tablename__ = 'topping'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False, unique=True)
+    pizzas = db.relationship('Pizza', secondary=toppings, lazy='subquery')
+
+
+class Company(db.Model):
+    __tablename__ = 'company'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    region = db.Column(db.String(50), nullable=False,)
+    pizzas = db.relationship('Pizza')
+
+
+# Schemas
+class PizzaSchema(ma.Schema):
+    id = fields.Integer()
+    name = fields.String(required=True)
+    prices = fields.Nested('PriceSchema', exclude=('pizza_id',), many=False)
+    toppings = fields.Nested('ToppingSchema', exclude=('pizzas',), many=True)
 
 
 class ToppingSchema(ma.Schema):
     id = fields.Integer()
     name = fields.String()
+    pizzas = fields.Nested('PizzaSchema', exclude=('toppings',), many=True)
 
 
 class PriceSchema(ma.Schema):
@@ -58,9 +76,3 @@ class PriceSchema(ma.Schema):
     size_xl = fields.String(allow_none=True)
     pizza_id = fields.Integer(required=True)
 
-
-class PizzaSchema(ma.Schema):
-    id = fields.Integer()
-    name = fields.String(required=True)
-    prices = fields.Nested(PriceSchema, many=False)
-    toppings = fields.Nested(ToppingSchema, many=True)
