@@ -17,16 +17,6 @@ def scrape_pizzamidjan():
         pizza_mid_price = pizza.find("div", {"class", "item_price"}).text.strip()[5:10]
 
         add_scraped_pizza(pizza_name, pizza_topping_list, m_price=pizza_mid_price)
-        # toplist = []
-        # for item in listPizzaTopping:
-        #    t = db.session.query(Topping).filter_by(name=item).first()
-        #    if t is None:
-        #        t = Topping(name=item)
-        #    toplist.append(t)
-        # test = Price(size_m=int(pizzaMidPrice.replace('.', '')))
-        # p = Pizza(name=pizzaName, prices=test, toppings=toplist)
-        # result.append(Pizza(name=pizzaName, prices=test, toppings=toplist))
-        # db.session.add(p)
     return
 
 
