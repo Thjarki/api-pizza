@@ -12,6 +12,9 @@ pizza_topping = db.Table('pizza_topping',
 
 class Pizza(db.Model):
     __tablename__ = 'pizza'
+    __table_args__ = (
+        db.UniqueConstraint('name', 'company_id', name='unique_component_commit'),
+    )
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     price_id = db.Column(db.Integer, db.ForeignKey('price.id'))
