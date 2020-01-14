@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 ma = Marshmallow()
 db = SQLAlchemy()
 
-toppings = db.Table('toppings',
+pizza_topping = db.Table('pizza_topping',
     db.Column('pizza_id', db.Integer, db.ForeignKey('pizza.id'), primary_key=True),
     db.Column('topping', db.Integer, db.ForeignKey('topping.id'), primary_key=True))
 
@@ -13,10 +13,11 @@ toppings = db.Table('toppings',
 class Pizza(db.Model):
     __tablename__ = 'pizza'
     id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
+    price_id = db.Column(db.Integer, db.ForeignKey('price.id'))
     name = db.Column(db.String(250), nullable=False)
-    prices = db.relationship('Price', uselist=False ,backref='pizza', lazy=True)
-    toppings = db.relationship('Topping', secondary=toppings, lazy='subquery')
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
+    prices = db.relationship('Price', uselist=False, backref='pizza', lazy=True)
+    toppings = db.relationship('Topping', secondary=pizza_topping, lazy='subquery')
 
     def __str__(self):
         return "%s,\n%s" % (self.name, self.toppings)
@@ -29,8 +30,6 @@ class Price(db.Model):
     size_m = db.Column(db.Integer, nullable=True)
     size_l = db.Column(db.Integer, nullable=True)
     size_xl = db.Column(db.Integer, nullable=True)
-    pizza_id = db.Column(db.Integer, db.ForeignKey('pizza.id'),
-                         nullable=False)
 
     def __init__(self, size_s=None, size_m=None, size_l=None, size_xl= None):
         self.size_s = size_s
@@ -43,7 +42,7 @@ class Topping(db.Model):
     __tablename__ = 'topping'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False, unique=True)
-    pizzas = db.relationship('Pizza', secondary=toppings, lazy='subquery')
+    pizzas = db.relationship('Pizza', secondary=pizza_topping, lazy='subquery')
 
 
 class Company(db.Model):
@@ -51,6 +50,7 @@ class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
     region = db.Column(db.String(50), nullable=False,)
+    delivers = db.Column(db.Boolean(), default=False, nullable=False,)
     pizzas = db.relationship('Pizza')
 
 
