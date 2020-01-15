@@ -18,6 +18,7 @@ class Dev(Config):
 class Test(Config):
     DEBUG = True
     TESTING = True
+    SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 

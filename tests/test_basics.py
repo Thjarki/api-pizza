@@ -1,28 +1,24 @@
 import unittest
+from flask import current_app
 from run import create_app
-from Model import db, Company, Pizza
+from Model import db
 from config import Test
-import Scrapes.scrapeMananger as Sm
 
 
-class TestClass(unittest.TestCase):
-
+class BasicsTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(Test)
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        self.client = self.app.test_client()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
 
-    def test_api_connection(self):
-        rv = self.client.get('api/')
-        self.assertEqual(rv.status, '200 OK')
+    def test_app_exists(self):
+        self.assertFalse(current_app is None)
 
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_app_is_testing(self):
+        self.assertTrue(current_app.config['TESTING'])

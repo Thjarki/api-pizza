@@ -1,10 +1,10 @@
 from flask import Flask
-from config import Config
+from config import Config, Test
 # FIXME: config_object parameter does not work for some reason.
 # Parameter for some reason is not a string, Turns into an object
 def create_app(config_object):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(Test)
 
     from app import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
