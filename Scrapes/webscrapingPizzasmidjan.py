@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from Model import db, Pizza, Price, Topping, Company
 import Scrapes.scrapeMananger as ScrapeMananger
 
 URL = 'https://www.pizzasmidjan.is/is/matsedlar/matsedill'
