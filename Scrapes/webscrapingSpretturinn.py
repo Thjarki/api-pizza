@@ -1,32 +1,34 @@
-import bs4
-from urllib.request import urlopen as uReq
-from bs4 import BeautifulSoup as soup
-from string import digits
-
-myUrl = 'http://www.spretturinn.is/is/pizzulisti'
+import requests
+from bs4 import BeautifulSoup
+import Scrapes.scrapeMananger as ScrapeMananger
+import re
 
 
-uClient = uReq(myUrl)
-
-page_html = uClient.read()
-uClient.close()
+URL = 'http://www.spretturinn.is/is/pizzulisti'
 
 
-page_soup = soup(page_html, "html.parser")
+def scrape_spretturinn():
+    page = requests.get(URL)
+    page_soup = BeautifulSoup(page.content, "html.parser")
 
-pizzas = page_soup.findAll("div", {"class":"tile product image"})
+    pizzas = page_soup.findAll("div", {"class": "tile product image"})
+    company_id = ScrapeMananger.insert_or_get_company(name='spretturinn', region='norðuland').id
 
-for pizza in pizzas:
-	pizzaName = pizza.h2.text
-	pizzaTopping = pizza.findAll("div", {"class":"description"})[0].text
-	listPizzaTopping = pizzaTopping.split(", ")
-	pizzaSmallPrice = pizza.findAll("span", {"class":"price"})[0].text
-	pizzaMidPrice = pizza.findAll("span", {"class":"price"})[1].text
-	pizzaBigPrice = pizza.findAll("span", {"class":"price"})[2].text
+    for pizza in pizzas:
+        pizzaName = pizza.h2.text
+        pizzaTopping = pizza.findAll("div", {"class": "description"})[0].text.lower().replace('.', '')
+        listPizzaTopping = pizzaTopping.split(", ")
+        pizzaSmallPrice = re.sub(r"\D", "", pizza.findAll("span", {"class": "price"})[0].text)
+        pizzaMidPrice = re.sub(r"\D", "", pizza.findAll("span", {"class": "price"})[1].text)
+        pizzaBigPrice = re.sub(r"\D", "", pizza.findAll("span", {"class": "price"})[2].text)
 
-	print("Nafn : " + pizzaName )
-	print("alegg : " + pizzaTopping)
-	print(listPizzaTopping)
-	print("litil verd: " + pizzaSmallPrice)
-	print("midstared : " + pizzaMidPrice)
-	print("stor verd : " + pizzaBigPrice)
+        # Don't add when pizza exists, TODO: Update pizza
+        if ScrapeMananger.pizza_exists(pizzaName, company_id):
+            continue
+        print(pizzaName, listPizzaTopping, company_id, pizzaSmallPrice, pizzaMidPrice, pizzaBigPrice)
+        ScrapeMananger.add_scraped_pizza(name=pizzaName,
+                                         scraped_toppings=listPizzaTopping,
+                                         company_id=company_id,
+                                         s_price=pizzaSmallPrice,
+                                         m_price=pizzaMidPrice,
+                                         l_price=pizzaBigPrice)
