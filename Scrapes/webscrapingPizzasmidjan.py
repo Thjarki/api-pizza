@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import Scrapes.scrapeMananger as ScrapeMananger
+import re
 
 URL = 'https://www.pizzasmidjan.is/is/matsedlar/matsedill'
 
@@ -15,8 +16,7 @@ def scrape_pizzamidjan():
         pizza_name = pizza.find("div", {"class", "item_title"}).text.strip()
         pizza_topping_Text = pizza.find("div", {"class", "item_desc"}).text.strip()
         pizza_topping_list = pizza_topping_Text.split(", ")
-        pizza_mid_price = pizza.find("div", {"class", "item_price"}).text.strip()[5:10]
-
+        pizza_mid_price = re.sub(r"\D", "", pizza.find("div", {"class", "item_price"}).text.strip()[5:10])
 
         # Don't add when pizza exists, TODO: Update pizza
         if ScrapeMananger.pizza_exists(pizza_name, company_id):
