@@ -6,8 +6,8 @@ ma = Marshmallow()
 db = SQLAlchemy()
 
 pizza_topping = db.Table('pizza_topping',
-    db.Column('pizza_id', db.Integer, db.ForeignKey('pizza.id'), primary_key=True),
-    db.Column('topping', db.Integer, db.ForeignKey('topping.id'), primary_key=True))
+    db.Column('pizza_id', db.Integer, db.ForeignKey('pizza.id')),
+    db.Column('topping', db.Integer, db.ForeignKey('topping.id')))
 
 
 class Pizza(db.Model):

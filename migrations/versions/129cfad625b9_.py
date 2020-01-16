@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e673186292bc
+Revision ID: 129cfad625b9
 Revises: 
-Create Date: 2020-01-14 12:57:15.569454
+Create Date: 2020-01-16 16:34:26.094776
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e673186292bc'
+revision = '129cfad625b9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -47,14 +47,14 @@ def upgrade():
     sa.Column('name', sa.String(length=250), nullable=False),
     sa.ForeignKeyConstraint(['company_id'], ['company.id'], ),
     sa.ForeignKeyConstraint(['price_id'], ['price.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name', 'company_id', name='unique_component_commit')
     )
     op.create_table('pizza_topping',
-    sa.Column('pizza_id', sa.Integer(), nullable=False),
-    sa.Column('topping', sa.Integer(), nullable=False),
+    sa.Column('pizza_id', sa.Integer(), nullable=True),
+    sa.Column('topping', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['pizza_id'], ['pizza.id'], ),
-    sa.ForeignKeyConstraint(['topping'], ['topping.id'], ),
-    sa.PrimaryKeyConstraint('pizza_id', 'topping')
+    sa.ForeignKeyConstraint(['topping'], ['topping.id'], )
     )
     # ### end Alembic commands ###
 
