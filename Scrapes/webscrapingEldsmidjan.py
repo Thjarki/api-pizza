@@ -1,37 +1,46 @@
-import bs4
-from urllib.request import urlopen as uReq
-from bs4 import BeautifulSoup as soup
-from string import digits
+import requests
+import Scrapes.scrapeMananger as ScrapeManager
+from bs4 import BeautifulSoup
+import re
 
-myUrl = 'https://www.eldsmidjan.is/#/'
-
-
-uClient = uReq(myUrl)
-
-page_html = uClient.read()
-uClient.close()
+URL = 'https://www.eldsmidjan.is/#/'
 
 
-page_soup = soup(page_html, "html.parser")
+# TODO: create Test and error handling
+def scrape_eldsmidjan():
+	page = requests.get(URL)
+	soup = BeautifulSoup(page.content, "html.parser")
 
-pizzas = page_soup.findAll("div", {"class":"grid product pizza"})
-pizzas += page_soup.findAll("div", {"class":"grid product pizza best-seller"})
-pizzas += page_soup.findAll("div", {"class":"grid product pizza vegetarian"})
-pizzas += page_soup.findAll("div", {"class":"grid product pizza vegetarian best-seller"})
+	pizza_elms = soup.findAll("div", {"class": "pizza"})
 
-for pizza in pizzas:
-	temp = pizza.h3.text.replace("\r", "").replace("\t", "").replace("\n", "").replace("E1", "").replace("E2", "")
-	pizzaName = ''.join(i for i in temp if not i.isdigit())
-	pizzaTopping = pizza.p.text.strip()
-	listPizzaTopping = pizzaTopping.split(", ")
-	pizzaMidPrice = pizza.li.text.replace("\r", "").replace("\t", "").replace("\n", "").replace("+", "")[3:]
-	pizzaBigPrice = pizza.findAll("li")[1].text.replace("\r", "").replace("\t", "").replace("\n", "").replace("+", "")[4:]
+	company_id = ScrapeManager.insert_or_get_company(name='Eldsmiðjan', region='höfuðborgarsvæðið').id
+
+	for pizza in pizza_elms:
+		pizza.h3.span.replace_with('')
+		pizzaName = re.sub(r'[^ \w\.]', '', pizza.h3.text)
+		pizzaTopping = pizza.p.text.strip().lower()
+		listPizzaTopping = pizzaTopping.split(", ")
+		pizzaMidPrice = None
+		pizzaBigPrice = None
+
+		price = soup.find('div', string="Mið").parent.text
+		if price is not None:
+			pizzaMidPrice = re.sub(r"\D", "", price)
+
+		price = soup.find('div', string="Stór").parent.text
+		if price is not None:
+			pizzaBigPrice = re.sub(r"\D", "", price)
+
+		#print("Nafn: {}".format(pizzaName))
+		#print("alegg: {}".format(pizzaTopping))
+		#print(listPizzaTopping)
+		#print("litil verd: {}".format(None))
+		#print("midstared: {}".format(pizzaMidPrice))
+		#print("stor verd: {}".format(pizzaBigPrice))
+
+		if ScrapeManager.pizza_exists(pizzaName, company_id):
+			continue
+		ScrapeManager.add_scraped_pizza(pizzaName, listPizzaTopping, company_id, m_price=pizzaMidPrice, l_price=pizzaBigPrice)
 
 
-	print("Nafn : " + pizzaName )
-	print("alegg : " + pizzaTopping)
-	print(listPizzaTopping)
-	print("midstared : " + pizzaMidPrice)
-	print("stor verd : " + pizzaBigPrice)
 
-#þessi web scraper tekur bara pizzur ekki tilboð
