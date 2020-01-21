@@ -1,45 +1,42 @@
-import bs4
-from urllib.request import urlopen as uReq
-from bs4 import BeautifulSoup as soup
-from string import digits
+import requests
+from bs4 import BeautifulSoup
+import Scrapes.scrapeMananger as ScrapeManager
 
-myUrl = 'http://wilsons.is/MenuSite.aspx?g=1200'
+URL = 'http://wilsons.is/MenuSite.aspx?g=1200'
 
 
-uClient = uReq(myUrl)
+# TODO: Test
+def scrape_wilsons():
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, "html.parser")
+    pizza_elms = soup.findAll("div", {"class": "bgWhite"})[1:]
+    company_id = ScrapeManager.insert_or_get_company(name='Wilsons', region='höfuðborgarsvæðið').id
 
-page_html = uClient.read()
-uClient.close()
+    for pizza in pizza_elms:
+        pizzaName = pizza.span.text.replace(" m/20% afslætti", "").replace("Stór ", "").replace(" m/25% afslætti", "")
+        # edge case of offer in menu
+        if 'm/3' in pizzaName:
+            continue
 
-page_soup = soup(page_html, "html.parser")
+        pizzaTopping = pizza.find("span", {"class": "aleggslysingText"}).text.lower()
+        listPizzaTopping = pizzaTopping.split(", ")
+        try:
+            temp = pizza.findAll("option")[0].text[2:].replace("m/3", "").replace("Rocky 2", "")
+            pizzaBigPrice = ''.join(i for i in temp if i.isdigit())
+        except:
+            pizzaBigPrice = None
+        try:
+            temp = pizza.findAll("option")[1].text[2:].replace("Rocky 2", "")
+            pizzaMidPrice = ''.join(i for i in temp if i.isdigit())
+        except:
+            pizzaMidPrice = None
+        try:
+            temp = pizza.findAll("option")[2].text[2:].replace("Rocky 2", "")
+            pizzaSmallPrice = ''.join(i for i in temp if i.isdigit())
+        except:
+            pizzaSmallPrice = None
 
-pizzas = page_soup.findAll("div", {"class" : "bgWhite"})
-iterpizzas = iter(pizzas)
-next(iterpizzas)
-
-for pizza in iterpizzas:
-	pizzaName = pizza.span.text.replace(" m/20% afslætti", "").replace("Stór ", "").replace(" m/25% afslætti", "")
-	pizzaTopping = pizza.find("span", {"class" : "aleggslysingText"}).text
-	listPizzaTopping = pizzaTopping.split(", ")
-	try:
-		temp = pizza.findAll("option")[0].text[2:].replace("m/3", "").replace("Rocky 2", "") 
-		pizzaBigPrice = ''.join(i for i in temp if i.isdigit())
-	except:
-		pizzaBigPrice = ""
-	try:
-		temp = pizza.findAll("option")[1].text[2:].replace("Rocky 2", "")  
-		pizzaMidPrice = ''.join(i for i in temp if i.isdigit())
-	except:
-		pizzaMidPrice = ""
-	try:
-		temp = pizza.findAll("option")[2].text[2:].replace("Rocky 2", "") 
-		pizzaSmallPrice = ''.join(i for i in temp if i.isdigit())
-	except:
-		pizzaSmallPrice = ""
-
-	print("Nafn : " + pizzaName )
-	print("alegg : " + pizzaTopping)
-	print(listPizzaTopping)
-	print("litil verd: " + pizzaSmallPrice)
-	print("midstared : " + pizzaMidPrice)
-	print("stor verd : " + pizzaBigPrice)	
+        if ScrapeManager.pizza_exists(pizzaName, company_id):
+            continue
+        ScrapeManager.add_scraped_pizza(pizzaName, listPizzaTopping, company_id, s_price=pizzaSmallPrice,
+                                        m_price=pizzaMidPrice, l_price=pizzaBigPrice)
