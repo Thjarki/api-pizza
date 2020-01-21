@@ -6,19 +6,17 @@ import re
 URL = 'https://www.greifinn.is/pizza/index/pizza#center'
 
 
+# TODO: Create test and error handling
 def scrape_greifinn():
     page = requests.get(URL)
     page_soup = BeautifulSoup(page.content, "html.parser")
 
-    pizzas = page_soup.find(id="pizzaMenu").findAll("li")
-    company_id = ScrapeMananger.insert_or_get_company(name='greifinn', region='norðuland').id
+    pizza_elms = page_soup.find(id="pizzaMenu").findAll("li")[1:]
+    company_id = ScrapeMananger.insert_or_get_company(name='Greifinn', region='norðuland').id
 
-    iterPizzas = iter(pizzas)
-    next(iterPizzas)
-
-    for pizza in iterPizzas:
-        pizzaName = pizza.h4.text.lower()
-        pizzaTopping = pizza.div.text
+    for pizza in pizza_elms:
+        pizzaName = pizza.h4.text
+        pizzaTopping = pizza.div.text.lower()
         listPizzaTopping = pizzaTopping.split(", ")
         temp = pizza.find("div", {"class": "price"}).findAll("div")[0].text
         pizzaSmallPrice = re.sub(r"\D", "", temp)
