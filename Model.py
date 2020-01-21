@@ -26,6 +26,7 @@ class Pizza(db.Model):
         return "%s,\n%s" % (self.name, self.toppings)
 
 
+# FIXME: change size_s to Integer
 class Price(db.Model):
     __tablename__ = 'price'
     id = db.Column(db.Integer, primary_key=True)
