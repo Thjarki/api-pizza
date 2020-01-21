@@ -1,50 +1,70 @@
-import bs4
-from urllib.request import urlopen as uReq
-from bs4 import BeautifulSoup as soup
-from string import digits
+import requests
+from bs4 import BeautifulSoup
+import Scrapes.scrapeMananger as ScrapeManager
+import re
 
-myUrl = 'https://castello.is/matsedill/#pizza'
+URL = 'https://castello.is/matsedill/#pizza'
 
 
-uClient = uReq(myUrl)
+# TODO: Test and error handle
+def scrape_castello():
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, "html.parser")
 
-page_html = uClient.read()
-uClient.close()
+    pizza_elms = soup.findAll("article", {"class": "wppizza_menu-pizza"})
+    company_id = ScrapeManager.insert_or_get_company(name='Castello', region='höfuðborgarsvæðið').id
 
-page_soup = soup(page_html, "html.parser")
+    for pizza in pizza_elms:
+        pizzaName = pizza.h2.text.strip()
 
-pizzas = page_soup.findAll("div", {"class" : "wppizza-article-info"})
-pizzasPrice = page_soup.findAll("div", {"class" : "clearfix wppizza-article-tiers wppizza-article-prices-1"})
-listi = []
-i = 0
-k = 0
-for pizza in pizzas[:28]:
-	if k == 1:
-		k += 1
-		continue
-	pizzaName = pizza.h2.text.strip()
-	pizzaTopping = pizza.p.text.split('\n')[0]
-	listPizzaTopping = pizzaTopping.split(", ")
-	try:
-		pizzaSmallPrice = pizzasPrice[i].findAll("span")[1].text.strip()
-	except:
-		pizzaSmallPrice = ""
-	try:
-		pizzaMidPrice = pizzasPrice[i].findAll("span")[3].text.strip()
-	except:
-		pizzaMidPrice = ""
-	try:
-		pizzaBigPrice = pizzasPrice[i].findAll("span")[5].text.strip()
-	except:
-		pizzaBigPrice = ""
-	i += 1
-	k += 1
+        if pizza.p.em is not None:
+            pizza.p.em.replace_with('')
+            pizzaTopping = pizza.p.text.strip().lower()
+        else:  # edge cases of no english toppings.
+            pizzaTopping = pizza.p.text.replace('\n', ' ').lower()
+        # edge case of toppings string ending with a dot.
+        if pizzaTopping[-1:] == '.':
+            pizzaTopping = pizzaTopping[:-1]
 
-	print("Nafn : " + pizzaName )
-	print("alegg : " + pizzaTopping)
-	print(listPizzaTopping)
-	print("litil verd: " + pizzaSmallPrice)
-	print("midstared : " + pizzaMidPrice)
-	print("stor verd : " + pizzaBigPrice)	
+        # edge case of 'og'
+        pizzaTopping = pizzaTopping.replace(' og ', ', ')
 
-#virkar en má gera miklu betur, þetta tekur ekki eftirréttar pizzur og ekki kebab pizzur
+        listPizzaTopping = pizzaTopping.split(", ")
+
+        # loop needed since not all pizzas have 3 sizes
+        pizzaSmallPrice = None
+        pizzaMidPrice = None
+        pizzaBigPrice = None
+        prices = pizza.find_all("span", {"class": "wppizza-article-price"})
+
+        for item in prices:
+            size = item.div.text
+            price = re.sub(r"\D", "", item.span.text)
+            if size == '9"':
+                pizzaSmallPrice = price
+            elif size == '12"':
+                pizzaMidPrice = price
+            elif size == '15"':
+                pizzaBigPrice = price
+
+        # edge case of pizza with no price
+        if pizzaSmallPrice == '0' and pizzaMidPrice == '0' and pizzaBigPrice == '0':
+            continue
+
+        # print("Nafn: {}".format(pizzaName))
+        # print("alegg: {}".format(pizzaTopping))
+        # print(listPizzaTopping)
+        # print("litil verd: {}".format(pizzaSmallPrice))
+        # print("midstared: {}".format(pizzaMidPrice))
+        # print("stor verd: {}".format(pizzaBigPrice))
+
+        # Don't add when pizza exists, TODO: Update pizza
+        if ScrapeManager.pizza_exists(pizzaName, company_id):
+            continue
+        ScrapeManager.add_scraped_pizza(name=pizzaName,
+                                        scraped_toppings=listPizzaTopping,
+                                        company_id=company_id,
+                                        s_price=pizzaSmallPrice,
+                                        m_price=pizzaMidPrice,
+                                        l_price=pizzaBigPrice)
+
