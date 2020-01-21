@@ -17,6 +17,8 @@ autopep8 = "*"
 flake8 = "*"
 requests = "*"
 beautifulsoup4 = "*"
+selenium = "*"
+pypdf2 = "*"
 
 [requires]
 python_version = "3.7"
