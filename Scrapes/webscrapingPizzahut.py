@@ -1,17 +1,15 @@
-import bs4
+import requests
 import re
-from urllib.request import urlopen as uReq
-from bs4 import BeautifulSoup as soup
+from bs4 import BeautifulSoup
 from string import digits
 
-myUrl = 'https://www.pizzahut.is/categories/pizzur?sc_pref_tags_not_in=dine_in_only'
-uClient = uReq(myUrl)
-page_html = uClient.read()
-uClient.close()
-page_soup = soup(page_html, "html.parser")
+# Only small size can be scraped and the menu is split up in two locations and whether you are picking up or delivery.
 
+URL = 'https://www.pizzahut.is/categories/pizzur?sc_pref_tags_not_in=dine_in_only'
+page = requests.get(URL)
+soup = BeautifulSoup(page.content, "html.parser")
 
-containers = page_soup.findAll("div", {"class": "product"})
+containers = soup.findAll("div", {"class": "product"})
 
 # first 2 containers are not pizzas and are therefore skipped.
 print(str(len(containers)-2) + " pizzas parsed")
