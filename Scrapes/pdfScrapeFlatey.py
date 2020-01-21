@@ -76,11 +76,16 @@ def scrape_flatey():
             'large': None,
         }
     ]
-    print(contents.replace('\n', ''))
 
     mContents = contents.replace('\n', '')
 
     for item in manual_info:
         print(item['name'] in mContents)
-        print(item['topping'] in mContents)
-        print(item['med'] in mContents)
+        if item['topping'] is not None:
+            print(item['topping'] in mContents)
+        if item['small'] in mContents:
+            print(item['small'] in mContents)
+        if item['med'] in mContents:
+            print(item['med'] in mContents)
+        if item['large'] in mContents:
+            print(item['large'] in mContents)
