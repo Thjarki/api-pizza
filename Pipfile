@@ -19,6 +19,7 @@ requests = "*"
 beautifulsoup4 = "*"
 selenium = "*"
 pypdf2 = "*"
+chromedriver-binary = "==79.0.3945.36.0"
 
 [requires]
 python_version = "3.7"
