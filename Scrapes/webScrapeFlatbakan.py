@@ -34,11 +34,11 @@ def scrape_flatbakan():
     for pizza in pizzas_elm:
         pizzaName = pizza.find('h2', {'class': 'salescloud-menu-title'}).text
         pizzaToppings = pizza.find('div', {'class': 'salescloud-menu-description'}).p.text.replace('.', '').replace(' og ', ', ').lower().strip()
-        if 'hálfmáni' in pizzaToppings:
+        if 'hálfmáni' in pizzaToppings: # edge case: topping that includes Calzone
             pizzaName += ' (hálfmáni)'
             pizzaToppings = pizzaToppings[:pizzaToppings.find('(')-1]
         listPizzaTopping = pizzaToppings.split(', ')
-        if len(listPizzaTopping) <= 1:
+        if len(listPizzaTopping) <= 1: # edge case: non topping pizza
             continue
         pizzaMidPrice = re.sub(r"\D", "", pizza.find('p', {'class': 'salescloud-menu-price'}).text)
         print(pizzaName)
