@@ -13,7 +13,7 @@ def scrape_eldsmidjan():
 
 	pizza_elms = soup.findAll("div", {"class": "pizza"})
 
-	company_id = ScrapeManager.insert_or_get_company(name='Eldsmiðjan', region='höfuðborgarsvæðið').id
+	company_id = ScrapeManager.insert_or_get_company(name='Eldsmiðjan', region='höfuðborgarsvæðið', delivers=True).id
 
 	for pizza in pizza_elms:
 		pizza.h3.span.replace_with('')

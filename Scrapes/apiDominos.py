@@ -7,7 +7,7 @@ URL = 'https://api.dominos.is/api/menu'
 # create Test
 def scrape_dominos():
     response = requests.get("https://api.dominos.is/api/menu")
-    company_id = ScrapeManager.insert_or_get_company(name='Dominos', region='höfuðborgarsvæðið').id
+    company_id = ScrapeManager.insert_or_get_company(name='Dominos', region='höfuðborgarsvæðið', delivers=True).id
     pizzas = response.json()
     topping = ""
     for pizza in pizzas['menu']['menuPizzas']:

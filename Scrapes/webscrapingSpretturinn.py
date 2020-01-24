@@ -11,7 +11,7 @@ def scrape_spretturinn():
     page_soup = BeautifulSoup(page.content, "html.parser")
 
     pizzas = page_soup.findAll("div", {"class": "tile product image"})
-    company_id = ScrapeManager.insert_or_get_company(name='Spretturinn', region='norðuland').id
+    company_id = ScrapeManager.insert_or_get_company(name='Spretturinn', region='norðuland', delivers=True).id
 
     for pizza in pizzas:
         pizzaName = pizza.h2.text

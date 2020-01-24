@@ -11,8 +11,15 @@ def scrape_greifinn():
     page = requests.get(URL)
     page_soup = BeautifulSoup(page.content, "html.parser")
 
-    pizza_elms = page_soup.find(id="pizzaMenu").findAll("li")[1:]
-    company_id = ScrapeMananger.insert_or_get_company(name='Greifinn', region='norðuland').id
+    company_id = ScrapeMananger.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
+
+    menu = page_soup.find(id="pizzaMenu")
+
+    if menu is None:  # Site is close, TODO: add more reliable check
+        return
+
+    pizza_elms = menu.find_All("li")[1:]
+    company_id = ScrapeMananger.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
 
     for pizza in pizza_elms:
         pizzaName = pizza.h4.text

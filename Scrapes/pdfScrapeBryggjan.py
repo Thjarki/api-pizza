@@ -1,6 +1,7 @@
 import io
 import requests
 from PyPDF2 import PdfFileReader
+import Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'http://www.bryggjan.is/static/files/menu/matsedill-is-70stk.pdf'
 
@@ -8,6 +9,9 @@ URL = 'http://www.bryggjan.is/static/files/menu/matsedill-is-70stk.pdf'
 def scrape_bryggjan():
     f = io.BytesIO(requests.get(URL).content)
     reader = PdfFileReader(f)
+
+    company_id = ScrapeManager.insert_or_get_company(name='Bryggjan', region='höfuðborgarsvæðið', delivers=False).id
+
     # Fixing few words for checks.
     contents = reader.getPage(0).extractText().replace('tún˚skur', 'túnfiskur').replace('Tor˚ærinn', 'Torfbærinn')
     manual_info = [

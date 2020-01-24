@@ -10,6 +10,11 @@ from Scrapes.webscrapingCastello import scrape_castello
 from Scrapes.webscrapingWilson import scrape_wilsons
 from Scrapes.apiDominos import scrape_dominos
 from Scrapes.apiPizzan import scrape_pizzan
+from Scrapes.webScrapeDevitos import scrape_devitos
+from Scrapes.webScrapeFlatbakan import scrape_flatbakan
+from Scrapes.webScrapingBlackbox import scrape_blackbox
+from Scrapes.pdfScrapeBryggjan import scrape_bryggjan
+from Scrapes.pdfScrapeFlatey import scrape_flatey
 
 
 pizzas_schema = PizzaSchema(many=True)
@@ -26,12 +31,14 @@ class Scrape(Resource):
         scrape_pizzamidjan()
         scrape_spretturinn()
         scrape_greifinn()
-
         scrape_eldsmidjan()
         scrape_castello()
         scrape_wilsons()
         scrape_dominos()
         scrape_pizzan()
+        scrape_devitos()
+        scrape_flatbakan()
+        scrape_blackbox()
 
         db.session.commit()
 

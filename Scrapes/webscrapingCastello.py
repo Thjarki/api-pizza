@@ -12,7 +12,7 @@ def scrape_castello():
     soup = BeautifulSoup(page.content, "html.parser")
 
     pizza_elms = soup.findAll("article", {"class": "wppizza_menu-pizza"})
-    company_id = ScrapeManager.insert_or_get_company(name='Castello', region='höfuðborgarsvæðið').id
+    company_id = ScrapeManager.insert_or_get_company(name='Castello', region='höfuðborgarsvæðið', delivers=True).id
 
     for pizza in pizza_elms:
         pizzaName = pizza.h2.text.strip()

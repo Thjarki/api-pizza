@@ -12,7 +12,7 @@ def scrape_eldofninn():
 
 	pizzas = soup.findAll("ul", {"class": "av-catalogue-list"})[0].findAll("li")
 	pizzas += soup.findAll("ul", {"class": "av-catalogue-list"})[1].findAll("li")
-	company_id = ScrapeManager.insert_or_get_company(name='Eldofninn', region='höfuðborgarsvæðið').id
+	company_id = ScrapeManager.insert_or_get_company(name='Eldofninn', region='höfuðborgarsvæðið', delivers=False).id
 
 	for pizza in pizzas:
 		pizzaName = pizza.find("div", {"class": "av-catalogue-title"}).text[4:].strip()

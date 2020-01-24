@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import Scrapes.scrapeMananger as ScrapeManager
 # noinspection PyUnresolvedReferences
 import chromedriver_binary
 import time
@@ -30,8 +31,11 @@ def get_html():
 def scrape_devitos():
     soup = BeautifulSoup(get_html(), "html.parser")
 
+    company_id = ScrapeManager.insert_or_get_company(name='Devitos', region='höfuðborgarsvæðið', delivers=False).id
+
     price_container = soup.find('div', {'class': 'toppings-price-style'})
     menu_container = soup.find('div', {'id': 'main-menu'})
+
 
     smallBasePrice = int(price_container.find('div', {'id': 'basePrice10'}).text)
     medBasePrice = int(price_container.find('div', {'id': 'basePrice12'}).text)
@@ -50,15 +54,25 @@ def scrape_devitos():
             continue
         pizzatoppingsList = item.find('p', {'class': 'menuItemToppings'}).text.replace(" og ", ", ").lower().split(", ")
         if(len(pizzatoppingsList)) > 1:
-            print(pizzaName)
-            pizzatoppingsList = [topping for topping in pizzatoppingsList if topping != 'ostur' and topping != 'devitos sósa']
-            print(pizzatoppingsList)
+            # pizzatoppingsList = [topping for topping in pizzatoppingsList if topping != 'ostur' and topping != 'devitos sósa']
+
             pizzaSmallPrice = len(pizzatoppingsList) * smallToppingBasePrice + smallBasePrice
-            pizzaMedPrice = len(pizzatoppingsList) * medToppingBasePrice + medBasePrice
+            pizzaMidPrice = len(pizzatoppingsList) * medToppingBasePrice + medBasePrice
             pizzaBigPrice = len(pizzatoppingsList) * bigToppingBasePrice + bigBasePrice
             pizzaXLPrice = len(pizzatoppingsList) * XLToppingBasePrice + XLBasePrice
 
-            print(pizzaSmallPrice)
-            print(pizzaMedPrice)
-            print(pizzaBigPrice)
-            print(pizzaXLPrice)
+            if ScrapeManager.pizza_exists(pizzaName, company_id):
+                continue
+            ScrapeManager.add_scraped_pizza(name=pizzaName,
+                                            scraped_toppings=pizzatoppingsList,
+                                            company_id=company_id,
+                                            s_price=pizzaSmallPrice,
+                                            m_price=pizzaMidPrice,
+                                            l_price=pizzaBigPrice,
+                                            xl_price=pizzaXLPrice)
+            # print(pizzaName)
+            # print(pizzatoppingsList)
+            # print(pizzaSmallPrice)
+            # print(pizzaMidPrice)
+            # print(pizzaBigPrice)
+            # print(pizzaXLPrice)

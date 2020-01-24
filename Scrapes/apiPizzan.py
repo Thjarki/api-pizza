@@ -9,7 +9,7 @@ def scrape_pizzan():
 
     pizzas = response.json()
 
-    company_id = ScrapeManager.insert_or_get_company(name='Pizzan', region='höfuðborgarsvæðið').id
+    company_id = ScrapeManager.insert_or_get_company(name='Pizzan', region='höfuðborgarsvæðið', delivers=True).id
 
     for pizza in pizzas:
 

@@ -10,7 +10,7 @@ def scrape_wilsons():
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
     pizza_elms = soup.findAll("div", {"class": "bgWhite"})[1:]
-    company_id = ScrapeManager.insert_or_get_company(name='Wilsons', region='höfuðborgarsvæðið').id
+    company_id = ScrapeManager.insert_or_get_company(name='Wilsons', region='höfuðborgarsvæðið', delivers=True).id
 
     for pizza in pizza_elms:
         pizzaName = pizza.span.text.replace(" m/20% afslætti", "").replace("Stór ", "").replace(" m/25% afslætti", "")
