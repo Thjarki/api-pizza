@@ -1,4 +1,4 @@
-from Model import db, Pizza, Price, Topping, Company
+from app.Model import db, Pizza, Price, Topping, Company
 from sqlalchemy import exists, and_
 
 # Manager for inserting and reteving scraped data into and from database

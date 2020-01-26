@@ -1,8 +1,7 @@
 import unittest
-from run import create_app
-from Model import db, Company, Pizza
+from app import create_app
+from app.Model import db
 from config import Test
-import Scrapes.scrapeMananger as Sm
 
 
 class TestClass(unittest.TestCase):

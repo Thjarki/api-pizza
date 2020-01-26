@@ -1,9 +1,9 @@
 from flask import Blueprint
 from flask_restful import Api
-from resources.Pizza import PizzaResource
-from resources.Ping import Ping
-from resources.Scrape import Scrape
-from resources.Topping import ToppingListResource, ToppingIDResource
+from app.resources.Pizza import PizzaResource
+from app.resources.Ping import Ping
+from app.resources.Scrape import Scrape
+from app.resources.Topping import ToppingListResource, ToppingIDResource
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)

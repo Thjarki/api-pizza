@@ -1,7 +1,7 @@
 import io
 import requests
 from PyPDF2 import PdfFileReader
-import Scrapes.scrapeMananger as ScrapeManager
+import app.Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'http://www.bryggjan.is/static/files/menu/matsedill-is-70stk.pdf'
 

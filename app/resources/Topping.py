@@ -1,7 +1,5 @@
-from flask import request
 from flask_restful import Resource
-from Model import db, ToppingSchema, Topping
-from marshmallow import ValidationError
+from app.Model import ToppingSchema, Topping
 
 toppings_schema = ToppingSchema(many=True)
 topping_schema = ToppingSchema()

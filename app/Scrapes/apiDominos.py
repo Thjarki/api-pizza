@@ -1,5 +1,5 @@
 import requests
-import Scrapes.scrapeMananger as ScrapeManager
+import app.Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'https://api.dominos.is/api/menu'
 

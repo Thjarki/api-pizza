@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import Scrapes.scrapeMananger as ScrapeManager
+import app.Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'http://wilsons.is/MenuSite.aspx?g=1200'
 

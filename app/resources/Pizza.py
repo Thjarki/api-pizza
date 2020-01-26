@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from Model import db, Pizza, PizzaSchema
+from app.Model import db, Pizza, PizzaSchema
 from marshmallow import ValidationError
 
 pizzas_schema = PizzaSchema(many=True)

@@ -1,7 +1,7 @@
 import unittest
 from flask import current_app
-from run import create_app
-from Model import db
+from app import create_app
+from app.Model import db
 from config import Test
 
 

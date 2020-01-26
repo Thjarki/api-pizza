@@ -1,5 +1,5 @@
 import requests
-import Scrapes.scrapeMananger as ScrapeManager
+import app.Scrapes.scrapeMananger as ScrapeManager
 from bs4 import BeautifulSoup
 import re
 

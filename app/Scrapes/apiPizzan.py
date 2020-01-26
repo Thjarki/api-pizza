@@ -1,5 +1,5 @@
 import requests
-import Scrapes.scrapeMananger as ScrapeManager
+import app.Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'https://api.pizzan.is/api/v1/pizzas/menu/'
 

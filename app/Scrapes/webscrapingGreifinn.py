@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import Scrapes.scrapeMananger as ScrapeMananger
 import re
+import app.Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'https://www.greifinn.is/pizza/index/pizza#center'
 
@@ -11,7 +11,7 @@ def scrape_greifinn():
     page = requests.get(URL)
     page_soup = BeautifulSoup(page.content, "html.parser")
 
-    company_id = ScrapeMananger.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
+    company_id = ScrapeManager.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
 
     menu = page_soup.find(id="pizzaMenu")
 
@@ -19,7 +19,7 @@ def scrape_greifinn():
         return
 
     pizza_elms = menu.find_All("li")[1:]
-    company_id = ScrapeMananger.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
+    company_id = ScrapeManager.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
 
     for pizza in pizza_elms:
         pizzaName = pizza.h4.text
@@ -33,10 +33,10 @@ def scrape_greifinn():
         pizzaBigPrice = re.sub(r"\D", "", temp)
 
         # Don't add when pizza exists, TODO: Update pizza
-        if ScrapeMananger.pizza_exists(pizzaName, company_id):
+        if ScrapeManager.pizza_exists(pizzaName, company_id):
             continue
 
-        ScrapeMananger.add_scraped_pizza(name=pizzaName,
+        ScrapeManager.add_scraped_pizza(name=pizzaName,
                                          scraped_toppings=listPizzaTopping,
                                          company_id=company_id,
                                          s_price=pizzaSmallPrice,
