@@ -2,6 +2,12 @@
 
 API for pizzas in iceland.
 
+# Requirements
+
+- python 3.7
+- pip
+- pipenv
+
 # How to run
 
 ```console
