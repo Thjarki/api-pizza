@@ -21,6 +21,7 @@ selenium = "*"
 pypdf2 = "*"
 chromedriver-binary = "==79.0.3945.36.0"
 gunicorn = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"
