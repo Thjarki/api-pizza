@@ -1,15 +1,28 @@
 from flask import request
-from flask_restful import Resource
-from app.Model import db, Pizza, PizzaSchema
+from flask_restful import Resource, reqparse
+from app.Model import db, Pizza, PizzaSchema, Topping
 from marshmallow import ValidationError
 
 pizzas_schema = PizzaSchema(many=True)
 pizza_schema = PizzaSchema()
 
+parser = reqparse.RequestParser()
+parser.add_argument('filter-topping', action='append')
 
 class PizzaResource(Resource):
     def get(self):
-        pizzas = Pizza.query.all()
+        args = parser.parse_args()
+
+        if args['filter-topping'] is not None:
+            conditions = []
+            for item in args['filter-topping']:
+                topping = Topping.query.filter_by(name=item).first()
+                conditions.append(Pizza.toppings.contains(topping))
+
+            pizzas = Pizza.query.filter(*conditions)
+        else:
+            pizzas = Pizza.query.all()
+
         pizzas = pizzas_schema.dump(pizzas)
         return {'status': 'success', 'data': pizzas}, 200
 
@@ -31,7 +44,6 @@ class PizzaResource(Resource):
 
         db.session.add(pizza)
         db.session.commit()
-
 
         result = pizza_schema.dump(pizza)
 
