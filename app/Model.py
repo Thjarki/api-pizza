@@ -21,16 +21,15 @@ class Pizza(db.Model):
     name = db.Column(db.String(250), nullable=False)
     prices = db.relationship('Price', uselist=False, backref='pizza', lazy=True)
     toppings = db.relationship('Topping', secondary=pizza_topping, lazy='subquery')
-
+    company = db.relationship('Company')
     def __str__(self):
         return "%s,\n%s" % (self.name, self.toppings)
 
 
-# FIXME: change size_s to Integer
 class Price(db.Model):
     __tablename__ = 'price'
     id = db.Column(db.Integer, primary_key=True)
-    size_s = db.Column(db.String(), nullable=True)
+    size_s = db.Column(db.Integer, nullable=True)
     size_m = db.Column(db.Integer, nullable=True)
     size_l = db.Column(db.Integer, nullable=True)
     size_xl = db.Column(db.Integer, nullable=True)
@@ -45,7 +44,8 @@ class Price(db.Model):
 class Topping(db.Model):
     __tablename__ = 'topping'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), nullable=False, unique=True)
+    name = db.Column(db.String(40), nullable=False, unique=True)
+    type = db.Column(db.String(40), nullable=True)
     pizzas = db.relationship('Pizza', secondary=pizza_topping, lazy='subquery')
 
 
@@ -55,8 +55,7 @@ class Company(db.Model):
     name = db.Column(db.String(50), nullable=False, unique=True)
     region = db.Column(db.String(50), nullable=False,)
     delivers = db.Column(db.Boolean(), default=False, nullable=False,)
-    pizzas = db.relationship('Pizza')
-
+    description = db.Column(db.Text(), nullable=False, default='Description missing')
 
 # Schemas
 class PizzaSchema(ma.Schema):
