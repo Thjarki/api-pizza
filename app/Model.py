@@ -21,7 +21,8 @@ class Pizza(db.Model):
     name = db.Column(db.String(250), nullable=False)
     prices = db.relationship('Price', uselist=False, backref='pizza', lazy=True)
     toppings = db.relationship('Topping', secondary=pizza_topping, lazy='subquery')
-    company = db.relationship('Company')
+    company = db.relationship('Company', uselist=False, backref='pizza', lazy=True)
+
     def __str__(self):
         return "%s,\n%s" % (self.name, self.toppings)
 
@@ -63,7 +64,7 @@ class PizzaSchema(ma.Schema):
     name = fields.String(required=True)
     prices = fields.Nested('PriceSchema', exclude=('pizza_id',), many=False)
     toppings = fields.Nested('ToppingSchema', exclude=('pizzas',), many=True)
-
+    company = fields.Nested('ComputerSchema', exclude=('id',), many=False)
 
 class ToppingSchema(ma.Schema):
     id = fields.Integer()
@@ -79,3 +80,10 @@ class PriceSchema(ma.Schema):
     size_xl = fields.String(allow_none=True)
     pizza_id = fields.Integer(required=True)
 
+
+class ComputerSchema(ma.Schema):
+    id = fields.Integer()
+    name = fields.String(required=True)
+    region = fields.String(required=True)
+    delivers = fields.Boolean()
+    description = fields.String()
