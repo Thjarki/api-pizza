@@ -11,14 +11,12 @@ def scrape_greifinn():
     page = requests.get(URL)
     page_soup = BeautifulSoup(page.content, "html.parser")
 
-    company_id = ScrapeManager.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
-
-    menu = page_soup.find(id="pizzaMenu")
+    menu = page_soup.find('div', id="pizzaMenu")
 
     if menu is None:  # Site is close, TODO: add more reliable check
         return
 
-    pizza_elms = menu.find_All("li")[1:]
+    pizza_elms = menu.find_all("li")[1:]
     company_id = ScrapeManager.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
 
     for pizza in pizza_elms:
@@ -42,3 +40,4 @@ def scrape_greifinn():
                                          s_price=pizzaSmallPrice,
                                          m_price=pizzaMidPrice,
                                          l_price=pizzaBigPrice)
+
