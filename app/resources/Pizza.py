@@ -7,21 +7,22 @@ from marshmallow import ValidationError
 pizzas_schema = PizzaSchema(many=True)
 pizza_schema = PizzaSchema()
 
-parser = reqparse.RequestParser()
-parser.add_argument('filter-topping', action='append')
-parser.add_argument('filter-company', action='append')
-parser.add_argument('filter-delivers', type=bool)
-
 
 class PizzaResource(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('filter-topping', type=str, action='append')
+        self.reqparse.add_argument('filter-company', type=str, action='append')
+        self.reqparse.add_argument('filter-delivers', type=bool)
+        super(PizzaResource, self).__init__()
+
     def get(self):
-        args = parser.parse_args()
+        args = self.reqparse.parse_args()
 
         conditions = []
 
         if args['filter-delivers'] is not None:
             conditions.append(Pizza.company.has(Company.delivers == args['filter-delivers']))
-
 
         if args['filter-company'] is not None:
             con = []
