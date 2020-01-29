@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
-from app.Model import db, Pizza, PizzaSchema, Topping
+from app.Model import db, Pizza, PizzaSchema, Topping, Company
+from sqlalchemy import or_
 from marshmallow import ValidationError
 
 pizzas_schema = PizzaSchema(many=True)
@@ -8,23 +9,40 @@ pizza_schema = PizzaSchema()
 
 parser = reqparse.RequestParser()
 parser.add_argument('filter-topping', action='append')
+parser.add_argument('filter-company', action='append')
+parser.add_argument('filter-delivers', type=bool)
 
 
 class PizzaResource(Resource):
     def get(self):
         args = parser.parse_args()
 
+        conditions = []
+
+        if args['filter-delivers'] is not None:
+            conditions.append(Pizza.company.has(Company.delivers == args['filter-delivers']))
+
+
+        if args['filter-company'] is not None:
+            con = []
+            for item in args['filter-company']:
+                company = Company.query.filter_by(name=item).first()
+                if company is None:
+                    return {'status': 'error', 'message': 'Company: "{}" does not exist'.format(item)}, 400
+                con.append(Pizza.company_id == company.id)
+            conditions.append(or_(*con))
+
         if args['filter-topping'] is not None:
-            conditions = []
             for item in args['filter-topping']:
                 topping = Topping.query.filter_by(name=item).first()
                 if topping is None:
                     return {'status': 'error', 'message': 'Topping: "{}" does not exist'.format(item)}, 400
                 conditions.append(Pizza.toppings.contains(topping))
 
-            pizzas = Pizza.query.filter(*conditions)
-        else:
+        if len(conditions) == 0:
             pizzas = Pizza.query.all()
+        else:
+            pizzas = Pizza.query.filter(*conditions)
 
         pizzas = pizzas_schema.dump(pizzas)
         return {'status': 'success', 'data': pizzas}, 200
