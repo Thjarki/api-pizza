@@ -4,6 +4,7 @@ from app.resources.Pizza import PizzaResource
 from app.resources.Ping import Ping
 from app.resources.Scrape import Scrape
 from app.resources.Topping import ToppingListResource, ToppingIDResource
+from app.resources.Company import CompanyResource
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -12,7 +13,8 @@ api = Api(api_bp)
 api.add_resource(PizzaResource, '/Pizza')
 
 api.add_resource(ToppingListResource, '/Toppings')
-api.add_resource(ToppingIDResource, '/Toppings/<int:id>', endpoint='task')
+api.add_resource(ToppingIDResource, '/Toppings/<int:id>')
+api.add_resource(CompanyResource, '/Company')
 # TODO: /company, company/id/, /Pizza/id,/
 
 api.add_resource(Ping, '/')
