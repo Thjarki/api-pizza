@@ -9,6 +9,7 @@ pizza_schema = PizzaSchema()
 parser = reqparse.RequestParser()
 parser.add_argument('filter-topping', action='append')
 
+
 class PizzaResource(Resource):
     def get(self):
         args = parser.parse_args()
@@ -17,6 +18,8 @@ class PizzaResource(Resource):
             conditions = []
             for item in args['filter-topping']:
                 topping = Topping.query.filter_by(name=item).first()
+                if topping is None:
+                    return {'status': 'error', 'message': 'Topping: "{}" does not exist'.format(item)}, 400
                 conditions.append(Pizza.toppings.contains(topping))
 
             pizzas = Pizza.query.filter(*conditions)
