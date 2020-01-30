@@ -11,7 +11,7 @@ def scrape_pizzamidjan():
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
     pizza_elms = soup.findAll("div", {"class": "item"})
-    company_id = ScrapeManager.insert_or_get_company(name='Pizza Smiðjan', region='norðuland', delivers=False).id
+    company_id = ScrapeManager.insert_or_get_company(name='Pizza Smiðjan', region='norðurland', delivers=False).id
 
     for pizza in pizza_elms:
         pizza_name = pizza.find("div", {"class", "item_title"}).text.strip()

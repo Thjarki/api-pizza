@@ -17,7 +17,7 @@ def scrape_greifinn():
         return
 
     pizza_elms = menu.find_all("li")[1:]
-    company_id = ScrapeManager.insert_or_get_company(name='Greifinn', region='norðuland', delivers=True).id
+    company_id = ScrapeManager.insert_or_get_company(name='Greifinn', region='norðurland', delivers=True).id
 
     for pizza in pizza_elms:
         pizzaName = pizza.h4.text
