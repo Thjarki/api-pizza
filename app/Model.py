@@ -47,7 +47,6 @@ class Topping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False, unique=True)
     type = db.Column(db.String(40), nullable=True)
-    pizzas = db.relationship('Pizza', secondary=pizza_topping, lazy='subquery')
 
 
 class Company(db.Model):
@@ -63,13 +62,13 @@ class PizzaSchema(ma.Schema):
     id = fields.Integer()
     name = fields.String(required=True)
     prices = fields.Nested('PriceSchema', exclude=('pizza_id',), many=False)
-    toppings = fields.Nested('ToppingSchema', exclude=('pizzas',), many=True)
+    toppings = fields.Nested('ToppingSchema', many=True)
     company = fields.Nested('ComputerSchema', exclude=('id',), many=False)
 
 class ToppingSchema(ma.Schema):
     id = fields.Integer()
     name = fields.String()
-    pizzas = fields.Nested('PizzaSchema', exclude=('toppings',), many=True)
+    type = fields.String()
 
 
 class PriceSchema(ma.Schema):
