@@ -1,4 +1,4 @@
-from app.Model import db, Pizza, Price, Topping, Company
+from app.Model import db, Pizza, Price, Topping, Company, WordFilter
 from sqlalchemy import exists, and_
 
 # Manager for inserting and reteving scraped data into and from database
@@ -21,9 +21,15 @@ def pizza_exists(name, company_id):
 def update_pizza():
     pass
 
+
 # TODO: refactor and create test
 def add_scraped_pizza(name, scraped_toppings, company_id,  s_price=None, m_price=None, l_price=None, xl_price=None):
+    # TODO: Update pizza
+    if pizza_exists(name, company_id):
+        return
+
     newToppings = []
+    scraped_toppings = filter_toppings(company_id, scraped_toppings)
     for item in scraped_toppings:  # Check if the topping exist,
         newTopping = db.session.query(Topping).filter_by(name=item).first()
         if newTopping is None:
@@ -56,5 +62,17 @@ def insert_or_get_company(name, region, delivers=False):
     return company
 
 
+# TODO: create test
+def filter_toppings(company_id, toppings_list):
+    filtered = []
+    if db.session.query(WordFilter).filter_by(company_id=company_id).first() is None:
+        return toppings_list
 
+    for item in toppings_list:
+        word_filter = db.session.query(WordFilter).filter_by(company_id=company_id, filter_word=item).first()
+        if word_filter is not None:
+            filtered.append(word_filter.replacement)
+        else:
+            filtered.append(item)
 
+    return filtered

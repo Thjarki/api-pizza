@@ -36,7 +36,5 @@ def scrape_wilsons():
         except:
             pizzaSmallPrice = None
 
-        if ScrapeManager.pizza_exists(pizzaName, company_id):
-            continue
         ScrapeManager.add_scraped_pizza(pizzaName, listPizzaTopping, company_id, s_price=pizzaSmallPrice,
                                         m_price=pizzaMidPrice, l_price=pizzaBigPrice)

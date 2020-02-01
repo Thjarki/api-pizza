@@ -57,6 +57,15 @@ class Company(db.Model):
     delivers = db.Column(db.Boolean(), default=False, nullable=False,)
     description = db.Column(db.Text(), nullable=False, default='Description missing')
 
+
+class WordFilter(db.Model):
+    __tableName__ = 'word_filter'
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False,)
+    filter_word = db.Column(db.String(50), nullable=False,)
+    replacement = db.Column(db.String(50), nullable=False,)
+
+
 # Schemas
 class PizzaSchema(ma.Schema):
     id = fields.Integer()
@@ -86,3 +95,4 @@ class ComputerSchema(ma.Schema):
     region = fields.String(required=True)
     delivers = fields.Boolean()
     description = fields.String()
+

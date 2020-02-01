@@ -20,9 +20,6 @@ def scrape_pizzan():
         pizzaMidPrice = pizza['minimumAmountMedium']
         pizzaBigPrice = pizza['minimumAmountLarge']
 
-        # Don't add when pizza exists, TODO: Update pizza
-        if ScrapeManager.pizza_exists(pizzaName, company_id):
-            continue
         ScrapeManager.add_scraped_pizza(name=pizzaName,
                                         scraped_toppings=listPizzaTopping,
                                         company_id=company_id,

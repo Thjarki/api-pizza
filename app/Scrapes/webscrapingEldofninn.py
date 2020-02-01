@@ -20,7 +20,4 @@ def scrape_eldofninn():
 		listPizzaTopping = pizzaTopping.split(" – ")
 		pizzaMidPrice = pizza.find("div", {"class": "av-catalogue-price"}).text[14:19]
 
-		# Don't add when pizza exists, TODO: Update pizza
-		if ScrapeManager.pizza_exists(pizzaName, company_id):
-			continue
 		ScrapeManager.add_scraped_pizza(pizzaName, listPizzaTopping, company_id, m_price=pizzaMidPrice)

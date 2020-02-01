@@ -53,6 +53,4 @@ def scrape_flatbakan():
         # print(listPizzaTopping)
         # print(pizzaMidPrice)
 
-        if ScrapeManager.pizza_exists(pizzaName, company_id):
-           continue
         ScrapeManager.add_scraped_pizza(pizzaName, listPizzaTopping, company_id, m_price=pizzaMidPrice)

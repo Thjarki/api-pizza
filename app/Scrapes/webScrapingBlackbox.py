@@ -38,8 +38,6 @@ def scrape_blackbox():
         listPizzaTopping = pizzaToppings.split(', ')
         pizzaMidPrice = re.sub(r"\D", "", pizza.p.text)
 
-        if ScrapeManager.pizza_exists(pizzaName, company_id):
-            continue
         ScrapeManager.add_scraped_pizza(name=pizzaName,
                                         scraped_toppings=listPizzaTopping,
                                         company_id=company_id,

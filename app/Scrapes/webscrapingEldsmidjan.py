@@ -38,8 +38,6 @@ def scrape_eldsmidjan():
 		#print("midstared: {}".format(pizzaMidPrice))
 		#print("stor verd: {}".format(pizzaBigPrice))
 
-		if ScrapeManager.pizza_exists(pizzaName, company_id):
-			continue
 		ScrapeManager.add_scraped_pizza(pizzaName, listPizzaTopping, company_id, m_price=pizzaMidPrice, l_price=pizzaBigPrice)
 
 

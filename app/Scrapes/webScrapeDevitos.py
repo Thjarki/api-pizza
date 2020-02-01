@@ -61,8 +61,6 @@ def scrape_devitos():
             pizzaBigPrice = len(pizzatoppingsList) * bigToppingBasePrice + bigBasePrice
             pizzaXLPrice = len(pizzatoppingsList) * XLToppingBasePrice + XLBasePrice
 
-            if ScrapeManager.pizza_exists(pizzaName, company_id):
-                continue
             ScrapeManager.add_scraped_pizza(name=pizzaName,
                                             scraped_toppings=pizzatoppingsList,
                                             company_id=company_id,

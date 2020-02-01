@@ -30,14 +30,9 @@ def scrape_greifinn():
         temp = pizza.find("div", {"class": "price"}).findAll("div")[2].text
         pizzaBigPrice = re.sub(r"\D", "", temp)
 
-        # Don't add when pizza exists, TODO: Update pizza
-        if ScrapeManager.pizza_exists(pizzaName, company_id):
-            continue
-
         ScrapeManager.add_scraped_pizza(name=pizzaName,
-                                         scraped_toppings=listPizzaTopping,
-                                         company_id=company_id,
-                                         s_price=pizzaSmallPrice,
-                                         m_price=pizzaMidPrice,
-                                         l_price=pizzaBigPrice)
-
+                                        scraped_toppings=listPizzaTopping,
+                                        company_id=company_id,
+                                        s_price=pizzaSmallPrice,
+                                        m_price=pizzaMidPrice,
+                                        l_price=pizzaBigPrice)

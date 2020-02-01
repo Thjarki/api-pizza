@@ -22,9 +22,6 @@ def scrape_spretturinn():
         pizzaMidPrice = re.sub(r"\D", "", pizza.findAll("span", {"class": "price"})[1].text)
         pizzaBigPrice = re.sub(r"\D", "", pizza.findAll("span", {"class": "price"})[2].text)
 
-        # Don't add when pizza exists, TODO: Update pizza
-        if ScrapeManager.pizza_exists(pizzaName, company_id):
-            continue
         ScrapeManager.add_scraped_pizza(name=pizzaName,
                                         scraped_toppings=listPizzaTopping,
                                         company_id=company_id,
