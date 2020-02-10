@@ -1,5 +1,10 @@
 from app.Model import db, Pizza, Price, Topping, Company, WordFilter
 from sqlalchemy import exists, and_
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+# noinspection PyUnresolvedReferences
+import chromedriver_binary
+import time
 
 # Manager for inserting and reteving scraped data into and from database
 
@@ -76,3 +81,23 @@ def filter_toppings(company_id, toppings_list):
             filtered.append(item)
 
     return filtered
+
+
+def get_page_selenium(url, pause_time=0):
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument('--no-proxy-server')
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get(url)
+    time.sleep(pause_time)
+    page = driver.page_source
+    driver.quit()
+    return page
+
+
+def get_page_requests():
+    pass

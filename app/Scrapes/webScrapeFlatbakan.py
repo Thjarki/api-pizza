@@ -1,36 +1,15 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import app.Scrapes.scrapeMananger as ScrapeManager
 import re
-# noinspection PyUnresolvedReferences
-import chromedriver_binary
 
-
-def get_html():
-    # this is slow, need to research faster methods, takes about 9 seconds
-    chrome_options = Options()
-    print('start')
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument('--no-proxy-server')
-    chrome_options.add_argument("--proxy-server='direct://'")
-    chrome_options.add_argument("--proxy-bypass-list=*")
-    chrome_options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(options=chrome_options)
-    print('get')
-    driver.get('https://www.flatbakan.is/baejarlind')
-    page = driver.page_source
-    print('quit')
-    driver.quit()
-    return page
+URL = 'https://www.flatbakan.is/baejarlind'
 
 
 def scrape_flatbakan():
-    soup = BeautifulSoup(get_html(), "html.parser")
+    page = ScrapeManager.get_page_selenium(URL)
+    soup = BeautifulSoup(page, "html.parser")
     company_id = ScrapeManager.insert_or_get_company(name='Flatbakan', region='höfuðborgarsvæðið', delivers=True).id
     menu_elm = soup.find('div', {'id': '1049564149'})
-    print(soup.original_encoding)
     pizzas_elm = menu_elm.find_all('div', {'class': 'salescloud-product-inner'})
 
     for pizza in pizzas_elm:
