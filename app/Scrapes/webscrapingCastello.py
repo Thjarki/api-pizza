@@ -26,7 +26,11 @@ def scrape_castello():
             pizza.p.em.replace_with('')
             pizzaTopping = pizza.p.text.strip().lower()
         else:  # edge cases of no english toppings.
-            pizzaTopping = pizza.p.text.replace('\n', ' ').lower()
+            brTag = pizza.p.find('br')
+            if str(brTag.nextSibling).strip()[0].isupper():  # english topping with no em tag, detected with isupper
+                pizzaTopping = str(brTag.previous_sibling).lower()  # getting text before line break
+            else:
+                pizzaTopping = pizza.p.text.replace('\n', ' ').lower()  # removing line break
         # edge case of toppings string ending with a dot.
         if pizzaTopping[-1:] == '.':
             pizzaTopping = pizzaTopping[:-1]
@@ -69,4 +73,3 @@ def scrape_castello():
                                         s_price=pizzaSmallPrice,
                                         m_price=pizzaMidPrice,
                                         l_price=pizzaBigPrice)
-
