@@ -8,7 +8,11 @@ URL = 'https://www.pizzasmidjan.is/is/matsedlar/matsedill'
 
 # TODO: error handling
 def scrape_pizzamidjan():
-    page = requests.get(URL)
+    try:
+        page = requests.get(URL)
+    except requests.Timeout:
+        # TODO: notify of this error
+        return
     soup = BeautifulSoup(page.content, "html.parser")
     pizza_elms = soup.findAll("div", {"class": "item"})
     company_id = ScrapeManager.insert_or_get_company(name='Pizza Smiðjan', region='norðurland', delivers=False).id

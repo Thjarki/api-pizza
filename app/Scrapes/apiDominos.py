@@ -6,7 +6,12 @@ URL = 'https://api.dominos.is/api/menu'
 
 # create Test
 def scrape_dominos():
-    response = requests.get("https://api.dominos.is/api/menu")
+    try:
+        response = requests.get("https://api.dominos.is/api/menu")
+    except requests.Timeout:
+        # TODO: notify of this error
+        return
+
     company_id = ScrapeManager.insert_or_get_company(name='Dominos', region='höfuðborgarsvæðið', delivers=True).id
     pizzas = response.json()
     topping = ""

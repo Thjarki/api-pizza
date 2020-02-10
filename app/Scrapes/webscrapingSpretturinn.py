@@ -7,7 +7,11 @@ URL = 'http://www.spretturinn.is/is/pizzulisti'
 
 
 def scrape_spretturinn():
-    page = requests.get(URL)
+    try:
+        page = requests.get(URL)
+    except requests.Timeout:
+        # TODO: notify of this error
+        return
     page_soup = BeautifulSoup(page.content, "html.parser")
 
     pizzas = page_soup.findAll("div", {"class": "tile product image"})

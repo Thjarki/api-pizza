@@ -5,7 +5,11 @@ URL = 'https://api.pizzan.is/api/v1/pizzas/menu/'
 
 
 def scrape_pizzan():
-    response = requests.get(URL)
+    try:
+        response = requests.get(URL)
+    except requests.Timeout:
+        # TODO: notify of this error
+        return
 
     pizzas = response.json()
 

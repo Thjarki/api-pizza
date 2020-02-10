@@ -7,7 +7,11 @@ URL = 'http://eldofninn.is/#matsedill'
 
 # TODO: Test
 def scrape_eldofninn():
-	page = requests.get(URL)
+	try:
+		page = requests.get(URL)
+	except requests.Timeout:
+		# TODO: notify of this error
+		return
 	soup = BeautifulSoup(page.content, "html.parser")
 
 	pizzas = soup.findAll("ul", {"class": "av-catalogue-list"})[0].findAll("li")

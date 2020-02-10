@@ -8,7 +8,11 @@ URL = 'https://www.greifinn.is/pizza/index/pizza#center'
 
 # TODO: Create test and error handling
 def scrape_greifinn():
-    page = requests.get(URL)
+    try:
+        page = requests.get(URL)
+    except requests.Timeout:
+        # TODO: notify of this error
+        return
     page_soup = BeautifulSoup(page.content, "html.parser")
 
     menu = page_soup.find('div', id="pizzaMenu")

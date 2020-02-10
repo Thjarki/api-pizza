@@ -8,7 +8,11 @@ URL = 'https://www.eldsmidjan.is/#/'
 
 # TODO: create Test and error handling
 def scrape_eldsmidjan():
-	page = requests.get(URL)
+	try:
+		page = requests.get(URL)
+	except requests.Timeout:
+		# TODO: notify of this error
+		return
 	soup = BeautifulSoup(page.content, "html.parser")
 
 	pizza_elms = soup.findAll("div", {"class": "pizza"})

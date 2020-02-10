@@ -8,7 +8,12 @@ URL = 'https://castello.is/matsedill/#pizza'
 
 # TODO: Test and error handle
 def scrape_castello():
-    page = requests.get(URL)
+    try:
+        page = requests.get(URL)
+    except requests.Timeout:
+        # TODO: notify of this error
+        return
+
     soup = BeautifulSoup(page.content, "html.parser")
 
     pizza_elms = soup.findAll("article", {"class": "wppizza_menu-pizza"})

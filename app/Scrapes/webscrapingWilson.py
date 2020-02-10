@@ -7,7 +7,11 @@ URL = 'http://wilsons.is/MenuSite.aspx?g=1200'
 
 # TODO: Test
 def scrape_wilsons():
-    page = requests.get(URL)
+    try:
+        page = requests.get(URL)
+    except requests.ConnectionError:
+        # TODO: notify of this error
+        return
     soup = BeautifulSoup(page.content, "html.parser")
     pizza_elms = soup.findAll("div", {"class": "bgWhite"})[1:]
     company_id = ScrapeManager.insert_or_get_company(name='Wilsons', region='höfuðborgarsvæðið', delivers=True).id

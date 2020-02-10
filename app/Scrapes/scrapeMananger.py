@@ -47,11 +47,6 @@ def add_scraped_pizza(name, scraped_toppings, company_id,  s_price=None, m_price
 
 
 # TODO: create test
-def get_company():
-    pass
-
-
-# TODO: create test
 def insert_or_get_company(name, region, delivers=False):
     company = db.session.query(Company).filter_by(name=name).first()
     if company is None:
@@ -65,6 +60,11 @@ def insert_or_get_company(name, region, delivers=False):
 # TODO: create test
 def filter_toppings(company_id, toppings_list):
     filtered = []
+
+    if len(toppings_list) == 1:  # edge case of margarita pizzas.
+        if toppings_list[0] == '':
+            return ['ostur', 'pizzusósa']
+
     if db.session.query(WordFilter).filter_by(company_id=company_id).first() is None:
         return toppings_list
 
