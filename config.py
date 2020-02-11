@@ -6,8 +6,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_RECORD_QUERIES = True
+    SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
 
@@ -17,7 +18,6 @@ class Dev(Config):
 
 
 class Test(Config):
-    DEBUG = True
     TESTING = True
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -28,3 +28,14 @@ class Test(Config):
 class Prod(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'mysql://user@localhost/foo'
+
+
+config = {
+    'development': Dev,
+    "dev": Dev,
+    'testing': Test,
+    'production': Prod,
+    "prod": Prod,
+    'config': Config,
+    'default': Dev
+}
