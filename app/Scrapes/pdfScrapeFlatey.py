@@ -4,7 +4,7 @@ from PyPDF2 import PdfFileReader
 
 URL = 'https://irp-cdn.multiscreensite.com/c20b6e4b/files/uploaded/flatey_matse%C3%B0ill_v9_IS.pdf'
 
-# TODO: insert into database
+# TODO: Change this into Selenium script https://www.flateypizza.is/panta
 def scrape_flatey():
     f = io.BytesIO(requests.get(URL).content)
     reader = PdfFileReader(f)

@@ -1,11 +1,12 @@
 import io
 import requests
 from PyPDF2 import PdfFileReader
+import re
 import app.Scrapes.scrapeMananger as ScrapeManager
 
 URL = 'http://www.bryggjan.is/static/files/menu/matsedill-is-70stk.pdf'
 
-# TODO: insert into database
+
 def scrape_bryggjan():
     f = io.BytesIO(requests.get(URL).content)
     reader = PdfFileReader(f)
@@ -93,13 +94,33 @@ def scrape_bryggjan():
     mContents = contents.replace('\n', '')
 
     for item in manual_info:
-        print(item['name'] in mContents)
-        if item['topping'] is not None:
-            print(item['topping'] in mContents)
-        if item['small'] in mContents:
-            print(item['small'] in mContents)
-        if item['med'] in mContents:
-            print(item['med'] in mContents)
-        if item['large'] in mContents:
-            print(item['large'] in mContents)
+        valid = True
+        pizza_name = item['name']
+        toppings = item['topping']
+        small_price = item['small']
+        med_price = item['med']
+        big_price = item['large']
 
+        if pizza_name not in mContents:
+            valid = False  # notify
+        if toppings is not None:  # margarita edge case
+            if item['topping'] not in mContents:
+                valid = False  # notify
+            else:
+                toppings = toppings.lower().replace(' og', ',').split(', ')
+        else:
+            toppings = ['ostur', 'pizzusósa']
+        if small_price not in mContents:
+            valid = False  # notify
+        if med_price not in mContents:
+            valid = False  # notify
+        if big_price not in mContents:
+            valid = False  # notify
+
+        if valid:
+            small_price = re.sub(r"\D", "", small_price)
+            med_price = re.sub(r"\D", "", med_price)
+            big_price = re.sub(r"\D", "", big_price)
+            ScrapeManager.add_scraped_pizza(pizza_name, toppings, company_id, small_price, med_price, big_price)
+        else:
+            break # TODO: notify breakage

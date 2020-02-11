@@ -11,6 +11,7 @@ from app.Scrapes.apiPizzan import scrape_pizzan
 from app.Scrapes.webScrapeDevitos import scrape_devitos
 from app.Scrapes.webScrapeFlatbakan import scrape_flatbakan
 from app.Scrapes.webScrapingBlackbox import scrape_blackbox
+from app.Scrapes.pdfScrapeBryggjan import scrape_bryggjan
 
 pizzas_schema = PizzaSchema(many=True)
 pizza_schema = PizzaSchema()
@@ -34,7 +35,7 @@ class Scrape(Resource):
         scrape_devitos()
         scrape_flatbakan()
         scrape_blackbox()
-
+        scrape_bryggjan()
         db.session.commit()
 
         return {"message": "successful scrape"}
